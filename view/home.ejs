@@ -1,0 +1,59 @@
+<%- include("./includes/head") %>
+    <section class="header">
+    <% if(postArr.length === 0 && isLogin){ %>
+        <div>
+            <h4>Nothing to see?</h4>
+            <p>Create a new post</p>
+            <a href="/admin/addpost">Create a new Post</a>
+        </div>
+    <% }%>
+        <div class="post-container">
+            <% for(let post of postArr){ %>
+            <div class="post-box">
+                <img src="<%= '/' + post.imgUrl %>" alt="<%= post.title %>" class="post-box-img">
+                <a href="/post/<%= post._id %>" class="post-title"><%= post.title.substr(0,40) %></a>
+                <p class="post-des"><%= post.description.substr(0,100) %></p>
+                <hr>
+                <div class="user-index">
+                    <% if(post.userId._id.toString() === currentUserID.toString()){ %>
+                        <a href="/admin/profile" >
+                            <% if(post.userId.profile_imgUrl && post.userId.isPremium){ %>
+                                <img src="<%='/' +post.userId.profile_imgUrl %>" class="profile-photo-home" alt="<%= post.userId.username %>"/>
+                            <%}else{ %>
+                                <i class="fa-solid fa-circle-user index-user-ic"></i>
+                            <% } %>
+                        </a>
+                    <% }else{ %>
+                        <a href="/profile/<%= post.userId._id %>">
+                            <% if(post.userId.profile_imgUrl && post.userId.isPremium){ %>
+                                <img src="<%='/' +post.userId.profile_imgUrl %>" class="profile-photo-home" alt="<%= post.userId.username %>"/>
+                            <%}else{ %>
+                                <i class="fa-solid fa-circle-user index-user-ic"></i>
+                            <% } %>
+                        </a>
+                    <% } %>
+                    <div>
+                        <p class="post-email"><%= post.userId.email %></p>
+                        <% if(post.userId.isPremium){%>
+                            <p class="post-email"><%= post.userId.username %><i class="fa-regular fa-star animate__animated animate__jello animate__infinite	infinite"></i>
+                            </p>
+                        <% }else{ %>
+                            <p class="post-email"><%= post.userId.username %></p>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            <%} %>
+        </div>
+        <div class="paginate">
+            <% if( !hasNextPage && currentPage !== 1){ %>
+                <a href="/?page=2">Next Page</a>
+            <% } %>        
+            <% if(hasNextPage){ %>
+                <a href="/?page=<%= nextPage %>">Next Page <%= nextPage %></a>
+            <% } %>
+            <% if(hasPreviousPage){ %>
+                <a href="/?page=<%= previousPage %>">Previous Page <%= previousPage %></a>
+            <% } %>
+        </div>
+<%- include("./includes/foot") %>
